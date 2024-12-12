@@ -1,10 +1,17 @@
+import 'dart:developer';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 import 'package:tezda_task/app/modules/Products/presentation/providers/get_Products_provider.dart';
+import 'package:tezda_task/app/modules/authentication/presentation/pages/forgot_password_page.dart';
+import 'package:tezda_task/app/modules/products/data/models/platzi_product_data.dart';
+import 'package:tezda_task/app/modules/products/presentation/pages/favorite_products_list_page.dart';
 import 'package:tezda_task/app/modules/products/presentation/pages/product_details_page.dart';
+import 'package:tezda_task/app/shared/extensions/context_extension.dart';
 import 'package:tezda_task/app/shared/functions/app_functions.dart';
 import 'package:tezda_task/app/shared/presentation/widgets/custom_button.dart';
 import 'package:tezda_task/app/shared/presentation/widgets/loader.dart';
@@ -25,11 +32,16 @@ class ProductsPage extends ConsumerStatefulWidget {
 }
 
 class _ProductsPageState extends ConsumerState<ProductsPage> {
+  List<PlatziProductData> favoriteProducts = [];
   @override
   void initState() {
     onInit(
           () {
         getProducts();
+        favoriteProducts = getFavoriteProducts() ?? [];
+        if (kDebugMode) {
+          print("fav products ${favoriteProducts}");
+        }
       },
     );
     super.initState();
@@ -38,6 +50,13 @@ class _ProductsPageState extends ConsumerState<ProductsPage> {
   void getProducts() {
     final notifier = ref.read(getProductsProvider.notifier);
     notifier.getProducts();
+  }
+
+  List<PlatziProductData>? getFavoriteProducts() {
+    return Preferences.getList(
+      key: PreferencesStrings.favoriteProducts,
+      creator: (map) => PlatziProductData.fromJson(map),
+    );
   }
 
   @override
@@ -60,6 +79,18 @@ class _ProductsPageState extends ConsumerState<ProductsPage> {
             },
           ),
         ),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 16.0),
+            child: tezda_taskIcon(
+              icon: Icons.favorite,
+              key: const Key("profileButton"),
+              onTap: () {
+                pushTo(context, const FavoriteProductsListPage());
+              },
+            ),
+          ),
+        ],
         title: Text(
           "Platzi Products",
           style: TextStyle(
@@ -190,10 +221,12 @@ class _ProductsPageState extends ConsumerState<ProductsPage> {
                           key: const Key("profileButton"),
                           color: Colors.red,
                           onTap: () {
-                            // Preferences.setModel(
-                            //   key: PreferencesStrings.favoriteProducts,
-                            //   model: products[index],
-                            // );
+                            log("adding to favorites");
+                            Preferences.setList(
+                              key: PreferencesStrings.favoriteProducts,
+                              list: [...favoriteProducts, products[index]],
+                            );
+                            context.showSuccess("Product added to favorites");
                           },
                         ),
                       )

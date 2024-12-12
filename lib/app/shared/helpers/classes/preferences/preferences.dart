@@ -68,15 +68,15 @@ class Preferences {
     return creator(Map.from(jsonDecode(value)));
   }
 
-  static void setList<T extends Cachable>({
+  static void setList<T extends Cachable2>({
     required String key,
     required List<T> list,
   }) {
-    final l = list.map((e) => jsonEncode(e.toMap())).toList();
+    final l = list.map((e) => jsonEncode(e.toJson())).toList();
     preferences.setStringList(key, l);
   }
 
-  static List<T>? getList<T extends Cachable>({
+  static List<T>? getList<T extends Cachable2>({
     required String key,
     required T Function(Map<String, dynamic> json) creator,
   }) {
@@ -90,4 +90,8 @@ class Preferences {
 
 abstract class Cachable {
   Map<String, dynamic> toMap();
+}
+
+abstract class Cachable2 {
+  Map<String, dynamic> toJson();
 }
