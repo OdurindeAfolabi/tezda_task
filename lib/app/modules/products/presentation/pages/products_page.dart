@@ -12,6 +12,8 @@ import 'package:tezda_task/core/framework/theme/colors/app_theme_provider.dart';
 
 import '../../../../../core/navigation/navigator.dart';
 import '../../../../../gen/assets.gen.dart';
+import '../../../../shared/helpers/classes/preferences/preferences.dart';
+import '../../../../shared/helpers/classes/preferences/preferences_strings.dart';
 import '../../../../shared/presentation/widgets/tezda_task_icon.dart';
 import '../../../profile/presentation/pages/profile_page.dart';
 
@@ -84,98 +86,118 @@ class _ProductsPageState extends ConsumerState<ProductsPage> {
                   onTap: (){
                     pushTo(context, ProductDetailsPage(productData: products[index]));
                   },
-                  child: Card(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(23),
-                      side: BorderSide(
-                        width: 0.2,
-                        color: colors.alwaysBlack.withOpacity(0.5),
-                      ),
-                    ),
-                    child: Container(
-                        padding: const EdgeInsets.only(
-                          left: 15,
-                          right: 15,
-                          top: 13.15,
-                          bottom: 15,
-                        ),
-                        decoration: const BoxDecoration(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(23),
+                  child: Stack(
+                    fit: StackFit.expand,
+                    children: [
+                      Card(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(23),
+                          side: BorderSide(
+                            width: 0.2,
+                            color: colors.alwaysBlack.withOpacity(0.5),
                           ),
                         ),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Expanded(
-                              flex: 4,
-                              child: Container(
-                                decoration: const BoxDecoration(
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(23),
-                                  ),
-                                ),
-                                child: ClipRRect(
-                                  borderRadius: const BorderRadius.all(
-                                    Radius.circular(23),
-                                  ),
-                                  child: (products[index].images ?? []).isNotEmpty
-                                      ? CachedNetworkImage(
-                                      imageUrl: (products[index].images ?? []).first ?? "",
-                                      imageBuilder: (context, imageProvider) => Container(
-                                        decoration: BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          image: DecorationImage(image: imageProvider),
-                                          // borderRadius: const BorderRadius.all(
-                                          //   Radius.circular(50),
-                                          // ),
-                                        ),
+                        child: Container(
+                            padding: const EdgeInsets.only(
+                              left: 15,
+                              right: 15,
+                              top: 13.15,
+                              bottom: 15,
+                            ),
+                            decoration: const BoxDecoration(
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(23),
+                              ),
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Expanded(
+                                  flex: 4,
+                                  child: Container(
+                                    decoration: const BoxDecoration(
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(23),
                                       ),
-                                      placeholder: (context, url) =>
-                                      const SizedBox(height: 24, width: 24, child: CupertinoActivityIndicator()),
-                                      errorWidget: (context, url, error) => Image.asset(
+                                    ),
+                                    child: ClipRRect(
+                                      borderRadius: const BorderRadius.all(
+                                        Radius.circular(23),
+                                      ),
+                                      child: (products[index].images ?? []).isNotEmpty
+                                          ? CachedNetworkImage(
+                                          imageUrl: (products[index].images ?? []).first ?? "",
+                                          imageBuilder: (context, imageProvider) => Container(
+                                            decoration: BoxDecoration(
+                                              shape: BoxShape.circle,
+                                              image: DecorationImage(image: imageProvider),
+                                              // borderRadius: const BorderRadius.all(
+                                              //   Radius.circular(50),
+                                              // ),
+                                            ),
+                                          ),
+                                          placeholder: (context, url) =>
+                                          const SizedBox(height: 24, width: 24, child: CupertinoActivityIndicator()),
+                                          errorWidget: (context, url, error) => Image.asset(
+                                            Assets.images.noProductImage.path,
+                                            height: 100,
+                                            width: 100,
+                                          ))
+                                          : Image.asset(
                                         Assets.images.noProductImage.path,
-                                        height: 100,
-                                        width: 100,
-                                      ))
-                                      : Image.asset(
-                                    Assets.images.noProductImage.path,
-                                    // height: 45,
-                                    // width: 45,
+                                        // height: 45,
+                                        // width: 45,
+                                      ),
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ),
-                            const Gap(10),
-                            Expanded(
-                              child: Text(
-                                "${products[index].title}",
-                                overflow: TextOverflow.ellipsis,
-                                textAlign: TextAlign.center,
-                                maxLines: 2,
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  fontFamily: 'DM Sans',
-                                  fontWeight: FontWeight.w700,
-                                  color: colors.always1d1a20
+                                const Gap(10),
+                                Expanded(
+                                  child: Text(
+                                    "${products[index].title}",
+                                    overflow: TextOverflow.ellipsis,
+                                    textAlign: TextAlign.center,
+                                    maxLines: 2,
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      fontFamily: 'DM Sans',
+                                      fontWeight: FontWeight.w700,
+                                      color: colors.always1d1a20
+                                    ),
+                                  ),
                                 ),
-                              ),
-                            ),
-                            Expanded(
-                              child: Text(
-                                "\$${products[index].price}",
-                                overflow: TextOverflow.ellipsis,
-                                maxLines: 2,
-                                style: const TextStyle(
-                                    fontSize: 16,
-                                    fontFamily: 'DM Sans',
-                                    fontWeight: FontWeight.w700,
-                                    color: Colors.blueAccent
+                                Expanded(
+                                  child: Text(
+                                    "\$${products[index].price}",
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 2,
+                                    style: const TextStyle(
+                                        fontSize: 16,
+                                        fontFamily: 'DM Sans',
+                                        fontWeight: FontWeight.w700,
+                                        color: Colors.blueAccent
+                                    ),
+                                  ),
                                 ),
-                              ),
-                            ),
-                          ],
-                        )),
+                              ],
+                            )),
+                      ),
+                      Positioned(
+                        top: 0,
+                        right: 5,
+                        child: tezda_taskIcon(
+                          icon: Icons.favorite_border,
+                          key: const Key("profileButton"),
+                          color: Colors.red,
+                          onTap: () {
+                            // Preferences.setModel(
+                            //   key: PreferencesStrings.favoriteProducts,
+                            //   model: products[index],
+                            // );
+                          },
+                        ),
+                      )
+                    ],
                   ),
                 );
               },

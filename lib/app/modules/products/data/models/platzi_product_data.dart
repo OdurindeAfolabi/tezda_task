@@ -4,7 +4,7 @@ part 'platzi_product_data.freezed.dart';
 part 'platzi_product_data.g.dart';
 
 @freezed
-class PlatziProductData with _$PlatziProductData {
+class PlatziProductData with _$PlatziProductData  {
   const factory PlatziProductData({
     int? id,
     String? title,
