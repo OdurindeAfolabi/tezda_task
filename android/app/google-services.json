@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1047069542114",
+    "project_id": "tezda-app-afolabi",
+    "storage_bucket": "tezda-app-afolabi.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1047069542114:android:3398cb0cf8134573b740bb",
+        "android_client_info": {
+          "package_name": "com.afolabi.tezda_task.tezda_task"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAdzvU0IoENZ1ewWqikUZWh_BzPVwv2qEM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
